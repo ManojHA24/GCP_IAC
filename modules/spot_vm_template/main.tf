@@ -24,9 +24,9 @@ resource "google_compute_instance_template" "new_template" {
   disk {
     auto_delete  = true
     boot         = true
-    device_name  = "new-template"
+    device_name  = var.template_name
     source_image = var.os #"projects/ubuntu-os-cloud/global/images/ubuntu-2410-oracular-amd64-v20241115"
-    mode         = "READ_WRITE"
+    mode         = var.os_disk_access_mode
     type         = "pd-balanced"
     disk_size_gb = var.os_disk_size
   }
@@ -35,7 +35,7 @@ resource "google_compute_instance_template" "new_template" {
     auto_delete = false
     boot        = false
     device_name = var.data_disk_name
-    mode        = "READ_WRITE"
+    mode        = var.data_disk_access_mode
     source      = var.data_disk_name
   }
 

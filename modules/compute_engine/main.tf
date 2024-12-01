@@ -1,21 +1,21 @@
 
-resource "google_compute_instance" "instance-20241130-101036" {
+resource "google_compute_instance" "compute-engine" {
   attached_disk {
-    device_name = "disk-2"
-    mode        = "READ_WRITE"
-    source      = "projects/valkyrie-project/zones/us-east1-b/disks/disk-2"
+    device_name = var.disk_name
+    mode        = "READ_ONLY"
+    source      = var.disk_id
   }
 
-  zone = "us-east1-b"
+  zone = "asia-south1-c"
 
   boot_disk {
     auto_delete = true
-    device_name = "instance-20241130-101036"
+    device_name = var.vm_name
 
     initialize_params {
-      image = "projects/ubuntu-os-cloud/global/images/ubuntu-2410-oracular-amd64-v20241115"
-      size  = 10
-      type  = "pd-standard"
+      image = var.os_image
+      size  = var.os_disk_size
+      type  = var.os_disk_type
     }
 
     mode = "READ_WRITE"
@@ -25,17 +25,14 @@ resource "google_compute_instance" "instance-20241130-101036" {
   deletion_protection = false
   enable_display      = false
 
-  labels = {
-    goog-ec-src = "vm_add-tf"
-  }
 
-  machine_type = "n2-standard-2"
+  machine_type = var.machine_type
 
   metadata = {
-    startup-script = "test.txt"
+    startup-script = "echo 'hello' > test.txt"
   }
 
-  name = "instance-20241130-101036"
+  name = var.vm_name
 
   network_interface {
     access_config {
@@ -44,19 +41,18 @@ resource "google_compute_instance" "instance-20241130-101036" {
 
     queue_count = 0
     stack_type  = "IPV4_ONLY"
-    subnetwork  = "projects/valkyrie-project/regions/us-east1/subnetworks/test-subnet"
+    subnetwork  = var.snet_id
   }
 
   scheduling {
-    automatic_restart   = false
-    on_host_maintenance = "TERMINATE"
-    preemptible         = false
-    provisioning_model  = "SPOT"
+    # automatic_restart   = false
+    # on_host_maintenance = "TERMINATE"
+    # preemptible         = false
+    provisioning_model  = "STANDARD"
   }
 
   service_account {
-    email  = "808850579741-compute@developer.gserviceaccount.com"
-    scopes = ["https://www.googleapis.com/auth/devstorage.read_only", "https://www.googleapis.com/auth/logging.write", "https://www.googleapis.com/auth/monitoring.write", "https://www.googleapis.com/auth/service.management.readonly", "https://www.googleapis.com/auth/servicecontrol", "https://www.googleapis.com/auth/trace.append"]
+    scopes = [ "cloud-platform" ]
   }
 
   shielded_instance_config {

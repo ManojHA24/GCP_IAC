@@ -19,3 +19,9 @@ variable "os_disk_size" {
 variable "data_disk_name" {
   
 }
+variable "data_disk_access_mode" {
+  
+}
+variable "os_disk_access_mode" {
+  
+}

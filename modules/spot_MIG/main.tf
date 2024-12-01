@@ -13,16 +13,12 @@ resource "google_compute_instance_group_manager" "instance_group" {
     type            = "PROACTIVE"
     minimal_action  = "RESTART"
     replacement_method = "RECREATE"
+    max_unavailable_fixed = 1
   }
 
   instance_lifecycle_policy {
     force_update_on_repair    = "YES"
     # default_action_on_failure = "REPAIR"
-  }
-
-  stateful_disk {
-    device_name = var.data_disk_name
-    delete_rule = "NEVER"
   }
 }
 
@@ -32,6 +28,7 @@ resource "google_compute_autoscaler" "autoscaler" {
   target  = google_compute_instance_group_manager.instance_group.self_link
 
   autoscaling_policy {
+    
     min_replicas    = 1
     max_replicas    = 10
     cooldown_period = 60
