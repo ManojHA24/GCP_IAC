@@ -8,11 +8,11 @@ terraform {
 
   required_version = ">= 1.5.0"
 
-  # backend "gcs" {
-  #   bucket  = "my-terraform-state-bucket"
-  #   prefix  = "terraform/state"
-  #   project = "my-gcp-project"
-  # }
+  backend "gcs" {
+    bucket  = "tofu-statefile-bucket"
+    prefix  = "tofustate/network"
+    
+  }
 }
 
 provider "google" {
